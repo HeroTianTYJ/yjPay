@@ -50,3 +50,34 @@ if ($notify) {
     print_r($notify);
     echo '';
 }
+
+
+
+//支付宝
+//初始化
+include __DIR__ . '/lib/Alipay.php';
+$Alipay = new Alipay([
+    'app_id' => '',  //APPID
+    'merchant_private_key' => '',  //应用私钥
+    'public_key' => '',  //公钥
+    'method' => 'page'  //page代表电脑支付，wap代表手机支付
+]);
+//支付
+echo $Alipay->pay(
+    [
+        'body' => '测试商品',
+        'subject' => '测试商品',
+        'out_trade_no' => time() . rand(1000, 9999),
+        'total_amount' => 1
+    ],
+    [
+        'return' => 'https://www.abc.com',
+        'notify' => 'https://www.abc.com'
+    ]
+);
+//异步通知
+if ($Alipay->check($_POST)) {
+    echo 'success';
+} else {
+    echo 'fail';
+}
